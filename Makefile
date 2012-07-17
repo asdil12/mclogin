@@ -6,16 +6,15 @@ SSL_ALIAS=login.minecraft.net
 #      .minecraft.net
 DOMAIN=foo.mc.4rt.org
 
-
-.PHONY: import_java_keystore all
+.PHONY: import_java_keystore cleanup_java_keystore all
 
 all: minecraft_launcher.jar
 
 import_java_keystore: ssl/java.crt
-	keytool -import -alias ${SSL_ALIAS} -file $< -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit
+	sudo keytool -import -alias ${SSL_ALIAS} -file $< -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit -noprompt
 
 cleanup_java_keystore:
-	keytool -delete -alias ${SSL_ALIAS} -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit
+	sudo keytool -delete -alias ${SSL_ALIAS} -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit
 
 minecraft_launcher.jar: load/minecraft_launcher.jar ssl/minecraft.key
 	rm -rf "${TMP_FOLDER}"

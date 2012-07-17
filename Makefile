@@ -58,10 +58,12 @@ resources:
 	# just to be sure - some dir's are missing...
 	cd www/MinecraftResources ; curl -s "http://s3.amazonaws.com/MinecraftResources/" | perl -ne 'while (m/<Key>([^<]*[^\/])<\/Key>/g) { print "$$1\n" }' | while read line ; do mkdir -p $$(dirname "$$line") ; done
 	cd www/MinecraftResources ; curl -s "http://s3.amazonaws.com/MinecraftResources/" | perl -ne 'while (m/<Key>([^<]*[^\/])<\/Key>/g) { print "$$1\n" }' | while read line ; do wget -c -O "$$line" "http://s3.amazonaws.com/MinecraftResources/$$line" ; done
+	cp index.php www/MinecraftResources
 
 downloads:
 	mkdir -p www/MinecraftDownload
 	cd www/MinecraftDownload ; curl -s "http://s3.amazonaws.com/MinecraftDownload/" | perl -ne 'while (m/<Key>([^<\/]*)<\/Key>/g) { print "$$1\n" }' | while read line ; do wget -c -O "$$line" "http://s3.amazonaws.com/MinecraftDownload/$$line" ; done
+	cp index.php www/MinecraftResources
 
 clean:
 	rm -f ./ssl/*

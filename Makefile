@@ -7,7 +7,7 @@ SSL_ALIAS=login.minecraft.net
 DOMAIN=foo.mc.4rt.org
 SSL_CN="*.mc.4rt.org"
 
-.PHONY: import_java_keystore cleanup_java_keystore all
+.PHONY: resources downloads import_java_keystore cleanup_java_keystore all
 
 all: minecraft_launcher.jar
 
@@ -46,6 +46,19 @@ load/minecraft_launcher.jar:
 
 load/minecraft_server.jar:
 	wget -O $@ ${SERVER_URL}
+
+resources:
+	mkdir -p www/MinecraftDownload
+	mkdir -p www/MinecraftResources
+	cd www/MinecraftDownload ; test -h resources || ln -s ../MinecraftResources resources
+	cd www/MinecraftResources ; curl -s "http://s3.amazonaws.com/MinecraftResources/" | perl -ne 'while (m/<Key>([^<]*\/)<\/Key>/g) { print "$$1\n" }' | while read line ; do mkdir -p "$$line" ; done
+	# just to be sure - some dir's are missing...
+	cd www/MinecraftResources ; curl -s "http://s3.amazonaws.com/MinecraftResources/" | perl -ne 'while (m/<Key>([^<]*[^\/])<\/Key>/g) { print "$$1\n" }' | while read line ; do mkdir -p $$(dirname "$$line") ; done
+	cd www/MinecraftResources ; curl -s "http://s3.amazonaws.com/MinecraftResources/" | perl -ne 'while (m/<Key>([^<]*[^\/])<\/Key>/g) { print "$$1\n" }' | while read line ; do wget -c -O "$$line" "http://s3.amazonaws.com/MinecraftResources/$$line" ; done
+
+downloads:
+	mkdir -p www/MinecraftDownload
+	cd www/MinecraftDownload ; curl -s "http://s3.amazonaws.com/MinecraftDownload/" | perl -ne 'while (m/<Key>([^<\/]*)<\/Key>/g) { print "$$1\n" }' | while read line ; do wget -c -O "$$line" "http://s3.amazonaws.com/MinecraftDownload/$$line" ; done
 
 clean:
 	rm -f ./ssl/*

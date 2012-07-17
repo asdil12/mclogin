@@ -5,6 +5,7 @@ SSL_ALIAS=login.minecraft.net
 # must have equal length to
 #      .minecraft.net
 DOMAIN=foo.mc.4rt.org
+SSL_CN="*.mc.4rt.org"
 
 .PHONY: import_java_keystore cleanup_java_keystore all
 
@@ -31,7 +32,7 @@ minecraft_launcher.jar: load/minecraft_launcher.jar ssl/minecraft.key
 	cd ${TMP_FOLDER} ; fastjar cf ../$@ .
 
 ssl/serverkey.pem:
-	openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout $@ -out $@ -subj "/CN=${SSL_ALIAS}/countryName=US/stateOrProvinceName=CA/organizationName=Minecraft"
+	openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout $@ -out $@ -subj "/CN=${SSL_CN}/countryName=US/stateOrProvinceName=CA/organizationName=Minecraft"
 	echo "you may copy $@ to /etc/lighttpd/certs/login.minecraft.net.pem"
 
 ssl/java.crt: ssl/serverkey.pem

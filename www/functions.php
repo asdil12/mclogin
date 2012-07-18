@@ -8,6 +8,7 @@ function sanitize($string) {
 }
 
 function parse_user($userline) {
+	$userline = str_replace("\n", '', $userline);
 	$uarray = explode('|', $userline);
 	return array(
 		'name' => @$uarray[0],

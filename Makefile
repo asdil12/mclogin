@@ -14,6 +14,9 @@ SSL_CN="*.mc.4rt.org"
 .PHONY: import_java_keystore cleanup_java_keystore all
 
 all: minecraft_launcher.jar minecraft_server.jar minecraft.jar www/MinecraftResources www/MinecraftDownload ssl/java.crt
+	touch userdb.txt
+	chmod 777 userdb.txt
+	chmod -R 777 www/MinecraftSkins
 
 import_java_keystore: ssl/java.crt
 	sudo keytool -import -alias ${SSL_ALIAS} -file $< -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit -noprompt

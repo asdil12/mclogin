@@ -12,15 +12,18 @@ SSL_CN="*.mc.4rt.org"
 
 .PHONY: resources downloads import_java_keystore cleanup_java_keystore all
 
-all: minecraft_launcher.jar www/MinecraftResources www/MinecraftDownload
-
+all: minecraft_launcher.jar www/MinecraftResources www/MinecraftDownload ssl/java.crt
 
 minecraft.jar: load/minecraft.jar
 	rm -rf "${TMP_CLIENT}"
 	mkdir ${TMP_CLIENT}
 	cd ${TMP_CLIENT} ; fastjar xf ../$<
 	perl -i -pe 's/s3\.amazonaws\.com/awsfo${DOMAIN}/' ${TMP_CLIENT}/ck.class
+	perl -i -pe 's/session\.minecraft\.net/sessionfoo${DOMAIN}/' ${TMP_CLIENT}/adl.class
+	perl -i -pe 's/https:\/\/login\.minecraft\.net/http:\/\/loginfooo${DOMAIN}/' ${TMP_CLIENT}/hp.class
 	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: ck.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
+	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: adl.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
+	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: hp.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
 	rm ${TMP_CLIENT}/META-INF/CODESIGN.RSA
 	rm ${TMP_CLIENT}/META-INF/CODESIGN.SF
 	cd ${TMP_CLIENT} ; fastjar cf ../$@ .
@@ -54,10 +57,10 @@ ssl/serverkey.pem:
 
 ssl/java.crt: ssl/serverkey.pem
 	openssl x509 -outform der -in $< -out $@
+	cd www ; test -h java.crt || ln -s ../$@
 
 ssl/minecraft.key: ssl/serverkey.pem
 	openssl rsa -outform der -in $< -pubout -out $@
-	cd www ; ln -s ../$@
 
 load/minecraft_launcher.jar:
 	wget -O $@ ${LAUNCHER_URL}
@@ -101,4 +104,4 @@ clean:
 	rm -f minecraft.jar
 	rm -rf "www/MinecraftDownload"
 	rm -rf "www/MinecraftResources"
-	rm -f www/minecraft.key
+	rm -f www/java.crt

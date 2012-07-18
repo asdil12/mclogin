@@ -9,10 +9,14 @@
 	<li>Download Weberver Certificate <a href="/java.crt">java.crt</a></li>
 	<li>
 		Import it: <tt>sudo keytool -import -alias login.minecraft.net -file java.crt -keystore $JRE_HOME/lib/security/cacerts -storepass changeit -noprompt</tt><br />
-		(To remove it: <tt>sudo keytool -delete -alias login.minecraft.net -keystore $JRE_HOME/lib/security/cacerts -storepass changeit</tt> )
+		(To remove it: <tt>sudo keytool -delete -alias login.minecraft.net -keystore $JRE_HOME/lib/security/cacerts -storepass changeit</tt> )<br />
+		On Archlinux the Java keystore is located in <tt>/etc/ssl/certs/java/cacerts</tt>
 	</li>
 	<li>Download <a href="/minecraft_launcher.jar">minecraft_launcher.jar</a></li>
-	<li>Run <tt>java -jar minecraft_launcher.jar</tt></li>
+	<li>
+		Run <tt>java -jar minecraft_launcher.jar</tt><br />
+		On Arch: <tt>LD_LIBRARY_PATH="/usr/lib/jvm/java-7-openjdk/jre/lib/amd64/" java -jar minecraft_launcher.jar</tt>
+	</li>
 </ol>
 <h3>Setting up Server</h3>
 <ol>

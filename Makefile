@@ -3,6 +3,7 @@ SERVER_URL=http://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.j
 CLIENT_URL=http://s3.amazonaws.com/MinecraftDownload/minecraft.jar
 TMP_LAUNCHER=tmp_launcher
 TMP_CLIENT=tmp_client
+TMP_SERVER=tmp_server
 SSL_ALIAS=login.minecraft.net
 # must have equal length to
 #      .minecraft.net
@@ -12,7 +13,13 @@ SSL_CN="*.mc.4rt.org"
 
 .PHONY: resources downloads import_java_keystore cleanup_java_keystore all
 
-all: minecraft_launcher.jar www/MinecraftResources www/MinecraftDownload ssl/java.crt
+all: minecraft_launcher.jar minecraft_server.jar minecraft.jar www/MinecraftResources www/MinecraftDownload ssl/java.crt
+
+import_java_keystore: ssl/java.crt
+	sudo keytool -import -alias ${SSL_ALIAS} -file $< -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit -noprompt
+
+cleanup_java_keystore:
+	sudo keytool -delete -alias ${SSL_ALIAS} -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit
 
 minecraft.jar: load/minecraft.jar
 	rm -rf "${TMP_CLIENT}"
@@ -27,12 +34,6 @@ minecraft.jar: load/minecraft.jar
 	rm ${TMP_CLIENT}/META-INF/CODESIGN.RSA
 	rm ${TMP_CLIENT}/META-INF/CODESIGN.SF
 	cd ${TMP_CLIENT} ; fastjar cf ../$@ .
-
-import_java_keystore: ssl/java.crt
-	sudo keytool -import -alias ${SSL_ALIAS} -file $< -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit -noprompt
-
-cleanup_java_keystore:
-	sudo keytool -delete -alias ${SSL_ALIAS} -keystore $$JRE_HOME/lib/security/cacerts -storepass changeit
 
 minecraft_launcher.jar: load/minecraft_launcher.jar ssl/minecraft.key
 	rm -rf "${TMP_LAUNCHER}"
@@ -49,7 +50,15 @@ minecraft_launcher.jar: load/minecraft_launcher.jar ssl/minecraft.key
 	rm ${TMP_LAUNCHER}/META-INF/MOJANG_C.DSA
 	rm ${TMP_LAUNCHER}/META-INF/MOJANG_C.SF
 	cd ${TMP_LAUNCHER} ; fastjar cf ../$@ .
-	cd www ; ln -s ../$@
+	cd www ; test -h $@ || ln -s ../$@
+
+minecraft_server.jar: load/minecraft_server.jar
+	rm -rf "${TMP_SERVER}"
+	mkdir ${TMP_SERVER}
+	cd ${TMP_SERVER} ; fastjar xf ../$<
+	perl -i -pe 's/session\.minecraft\.net/sessionfoo${DOMAIN}/' ${TMP_SERVER}/fl.class
+	cd ${TMP_SERVER} ; fastjar cf ../$@ .
+	cd www ; test -h $@ || ln -s ../$@
 
 ssl/serverkey.pem:
 	openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout $@ -out $@ -subj "/CN=${SSL_CN}/countryName=US/stateOrProvinceName=CA/organizationName=Minecraft"

@@ -1,0 +1,22 @@
+<h2>Minecraft Login/Update server</h2>
+<ul>
+	<li><a href="/register.jsp">Create Account</a></li>
+	<li><a href="/web_pass.php">Change Password</a></li>
+	<li><a href="/web_style.php">Change Style</a></li>
+</ul>
+<h3>Setting up Client</h3>
+<ol>
+	<li>Download Weberver Certificate <a href="/java.crt">java.crt</a></li>
+	<li>
+		Import it: <tt>sudo keytool -import -alias login.minecraft.net -file java.crt -keystore $JRE_HOME/lib/security/cacerts -storepass changeit -noprompt</tt><br />
+		(To remove it: <tt>sudo keytool -delete -alias login.minecraft.net -keystore $JRE_HOME/lib/security/cacerts -storepass changeit</tt> )
+	</li>
+	<li>Download <a href="/minecraft_launcher.jar">minecraft_launcher.jar</a></li>
+	<li>Run <tt>java -jar minecraft_launcher.jar</tt></li>
+</ol>
+<h3>Setting up Server</h3>
+<ol>
+	<li>Download <a href="/minecraft_server.jar">minecraft_server.jar</a></li>
+	<li>Place it in a new directory</li>
+	<li>Run <tt>java -jar minecraft_server.jar</tt></li>
+</ol>

@@ -15,6 +15,7 @@ SSL_CN="*.mc.4rt.org"
 
 all: minecraft_launcher.jar minecraft_server.jar minecraft.jar www/MinecraftResources www/MinecraftDownload ssl/java.crt
 	touch userdb.txt
+	echo 1 > version.txt
 	chmod 777 userdb.txt
 	chmod -R 777 www/MinecraftSkins
 

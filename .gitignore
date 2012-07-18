@@ -5,3 +5,4 @@ tmp_server
 official
 *.jar
 userdb.txt
+version.txt

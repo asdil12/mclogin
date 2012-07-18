@@ -1,0 +1,1 @@
+If no file is found, the default style is used

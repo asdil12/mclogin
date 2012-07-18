@@ -11,7 +11,7 @@ DOMAIN=.mc.4rt.org
 # (foo.mc.4rt.org)
 SSL_CN="*.mc.4rt.org"
 
-.PHONY: resources downloads import_java_keystore cleanup_java_keystore all
+.PHONY: import_java_keystore cleanup_java_keystore all
 
 all: minecraft_launcher.jar minecraft_server.jar minecraft.jar www/MinecraftResources www/MinecraftDownload ssl/java.crt
 
@@ -25,12 +25,20 @@ minecraft.jar: load/minecraft.jar
 	rm -rf "${TMP_CLIENT}"
 	mkdir ${TMP_CLIENT}
 	cd ${TMP_CLIENT} ; fastjar xf ../$<
+	# Resources
 	perl -i -pe 's/s3\.amazonaws\.com/awsfo${DOMAIN}/' ${TMP_CLIENT}/ck.class
+	# Skins
+	perl -i -pe 's/s3\.amazonaws\.com/awsfo${DOMAIN}/' ${TMP_CLIENT}/rv.class
+	perl -i -pe 's/s3\.amazonaws\.com/awsfo${DOMAIN}/' ${TMP_CLIENT}/vq.class
+	# Keepalive
 	perl -i -pe 's/session\.minecraft\.net/sessionfoo${DOMAIN}/' ${TMP_CLIENT}/adl.class
+	# Serverjoin
 	perl -i -pe 's/https:\/\/login\.minecraft\.net/http:\/\/loginfooo${DOMAIN}/' ${TMP_CLIENT}/hp.class
 	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: ck.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
 	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: adl.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
 	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: hp.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
+	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: rv.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
+	perl -i -e 'undef $$/; $$_=<>; s#\r\nName: vq.class\r\nSHA1-Digest: .*\r\n##g; print' ${TMP_CLIENT}/META-INF/MANIFEST.MF
 	rm ${TMP_CLIENT}/META-INF/CODESIGN.RSA
 	rm ${TMP_CLIENT}/META-INF/CODESIGN.SF
 	cd ${TMP_CLIENT} ; fastjar cf ../$@ .

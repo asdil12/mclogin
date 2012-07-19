@@ -69,8 +69,10 @@
 			<table border="0">
 				<tr>
 					<td>Username:</td>
-					<td><input type="text" name="username" id="username" onkeyup="display_skin(this.value);" /></td>
-					<!--&nbsp;<button type='button' onclick="display_skin(document.getElementById('username').value);">View current</button>-->
+					<td>
+						<input type="text" name="username" id="username" onkeyup="display_skin(this.value);" />
+						<button type='button' onclick="lastuser=''; display_skin(document.getElementById('username').value);">&#10227;</button>
+					</td>
 				</tr>
 				<tr>
 					<td>Password:</td>

@@ -7,6 +7,7 @@
 				//draw_hat('player_hat', username, 15);
 				//draw_head('player_head', username, 15);
 				draw_model('player_model', 'player_scratch', username, 6, true);
+				draw_model_back('player_model_back', 'player_scratch_back', username, 6, true);
 			}
 			var loadskin = 'default';
 			window.onload = function() {
@@ -67,7 +68,10 @@
 		<input type="submit" value="change password" />
 		</form>
 		<br />
-		<img width="64" height="32" id="view" style="border: 1px solid black;" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /><br />
+		<div style="position: relative; width: 384px; height: 192px;">
+			<img width="384" height="192" id="view" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" style="position: absolute; left: 0; top: 0; z-index: 2; opacity: 0;" />
+			<canvas id="player_scratch" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+		</div>
 		<h4>Preview</h4>
 
 		<!--
@@ -80,10 +84,16 @@
 		</div>
 		-->
 
-		<div class="minecraft_model" id="model">
-		    <canvas class="scratch" id="player_scratch"></canvas><canvas class="model" id="player_model"></canvas>
+		<div class="minecraft_model" id="model" style="float: left; margin-right: 2em;">
+		    <canvas class="model" id="player_model"></canvas>
 		    <script type="text/javascript">
 			draw_model('player_model','player_scratch','default',6,true);
+		    </script>
+		</div>
+		<div class="minecraft_model" id="model_back">
+		    <canvas class="scratch" id="player_scratch_back"></canvas><canvas class="model" id="player_model_back"></canvas>
+		    <script type="text/javascript">
+			draw_model('player_model_back','player_scratch_back','default',6,true);
 		    </script>
 		</div>
 	</body>

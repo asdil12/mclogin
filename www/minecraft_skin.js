@@ -94,6 +94,101 @@ function draw_model(canvas_id,scratch_id,username,scale,hat) {
 	}
 }
 
+//Draw an isometric model of a minecraft character
+function draw_model_back(canvas_id,scratch_id,username,scale,hat) {
+	var model = document.getElementById(canvas_id).getContext('2d');
+	var scratch = document.getElementById(scratch_id).getContext('2d');
+
+	//Resize Scratch
+	document.getElementById(scratch_id).width = 64*scale;
+	document.getElementById(scratch_id).height = 32*scale;
+
+	//Resize Isometric Area (Found by trial and error)
+	document.getElementById(canvas_id).width = 20*scale;
+	document.getElementById(canvas_id).height = 44.8*scale;
+
+	var skin = new Image();
+	skin.src = '/MinecraftSkins/' + username + '.png';
+
+	skin.onload = function(){
+		//Draw the skin on to the scratch
+		scratch.drawImage(skin,0,0,64,32,0,0,64,32);
+		//Scale it
+		scale_image(scratch.getImageData(0,0,64,32), scratch, 0, 0, scale);
+		//Right Leg
+		//Right Leg - Back
+		model.setTransform(1,-0.5,0,1.2,0,0);
+		//model.scale(-1,1);
+		model.drawImage(document.getElementById(scratch_id), 12*scale, 20*scale, 4*scale, 12*scale, 12*scale, 34.4/1.2*scale, 4*scale, 12*scale);
+
+		//Left Leg
+		//Left Leg - Left
+		model.setTransform(1,0.5,0,1.2,0,0);
+		model.scale(-1,1);
+		model.drawImage(document.getElementById(scratch_id), 0*scale, 20*scale, 4*scale, 12*scale, -8*scale, 26.4/1.2*scale, 4*scale, 12*scale);
+		//Left Leg - Back
+		model.setTransform(1,-0.5,0,1.2,0,0);
+		model.scale(-1,1);
+		model.drawImage(document.getElementById(scratch_id), 12*scale, 20*scale, 4*scale, 12*scale, -12*scale, 34.4/1.2*scale, 4*scale, 12*scale);
+
+		//Arm Right
+		//Arm Right - Back
+		model.setTransform(1,-0.5,0,1.2,0,0);
+		model.drawImage(document.getElementById(scratch_id), 52*scale, 20*scale, 4*scale, 12*scale, 16*scale, 20/1.2*scale, 4*scale, 12*scale);
+		//Arm Right - Top
+		model.setTransform(-1,0.5,1,0.5,0,0);
+		model.scale(1,-1);
+		model.drawImage(document.getElementById(scratch_id), 44*scale, 16*scale, 4*scale, 4*scale, 0, -20*scale, 4*scale, 4*scale);
+
+		//Body
+		//Body - Back
+		model.setTransform(1,-0.5,0,1.2,0,0);
+		model.drawImage(document.getElementById(scratch_id), 32*scale, 20*scale, 8*scale, 12*scale, 8*scale, 20/1.2*scale, 8*scale, 12*scale);
+
+		//Arm Left
+		//Arm Left - Left
+		model.setTransform(1,0.5,0,1.2,0,0);
+		model.scale(-1,1);
+		model.drawImage(document.getElementById(scratch_id), 40*scale, 20*scale, 4*scale, 12*scale, -4*scale, 16/1.2*scale, 4*scale, 12*scale);
+		//Arm Left - Back
+		model.setTransform(1,-0.5,0,1.2,0,0);
+		model.scale(-1,1);
+		model.drawImage(document.getElementById(scratch_id), 52*scale, 20*scale, 4*scale, 12*scale, -8*scale, 20/1.2*scale, 4*scale, 12*scale);
+		//Arm Left - Top
+		model.setTransform(-1,0.5,1,0.5,0,0);
+		model.scale(-1,-1);
+		model.drawImage(document.getElementById(scratch_id), 44*scale, 16*scale, 4*scale, 4*scale, -16*scale, -20*scale, 4*scale, 4*scale);
+
+		//Head
+		//Head - Back
+		model.setTransform(1,-0.5,0,1.2,0,0);
+		model.drawImage(document.getElementById(scratch_id), 24*scale, 8*scale, 8*scale, 8*scale, 10*scale, 13/1.2*scale, 8*scale, 8*scale);
+		//Head - Left
+		model.setTransform(1,0.5,0,1.2,0,0);
+		model.drawImage(document.getElementById(scratch_id), 16*scale, 8*scale, 8*scale, 8*scale, 2*scale, 3/1.2*scale, 8*scale, 8*scale);
+		//Head - Top
+		model.setTransform(-1,0.5,1,0.5,0,0);
+		model.scale(1,-1);
+		model.drawImage(document.getElementById(scratch_id), 8*scale, 0, 8*scale, 8*scale, -5*scale, -13*scale, 8*scale, 8*scale);
+
+		if(hat == true) {
+			if(!is_one_color(scratch.getImageData(40*scale,8*scale,8*scale,8*scale))) {
+				//Hat
+				//Hat - Back
+				model.setTransform(1,-0.5,0,1.2,0,0);
+				model.drawImage(document.getElementById(scratch_id), 56*scale, 8*scale, 8*scale, 8*scale, 10*scale, 13/1.2*scale, 8*scale, 8*scale);
+				//Hat - Left
+				model.setTransform(1,0.5,0,1.2,0,0);
+				model.drawImage(document.getElementById(scratch_id), 48*scale, 8*scale, 8*scale, 8*scale, 2*scale, 3/1.2*scale, 8*scale, 8*scale);
+				//Hat - Top
+				model.setTransform(-1,0.5,1,0.5,0,0);
+				model.scale(1,-1);
+				model.drawImage(document.getElementById(scratch_id), 40*scale, 0, 8*scale, 8*scale, -5*scale, -13*scale, 8*scale, 8*scale);
+			}
+		}
+	}
+}
+
 //Draw the model facing the other way (left)
 function draw_model_left(canvas_id,scratch_id,username,scale,hat) {
 	//Draws an isometric model of the given minecraft username

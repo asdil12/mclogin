@@ -65,7 +65,7 @@
 		Username: <input type="text" name="username" id="username" />&nbsp;<button type='button' onclick="display_skin(document.getElementById('username').value);">View current</button><br />
 		Password: <input type="password" name="password" /><br />
 		New Skin: <input type="file" name="skin" /><br />
-		<input type="submit" value="change password" />
+		<input type="submit" value="change skin" />
 		</form>
 		<br />
 		<div style="position: relative; width: 384px; height: 192px;">

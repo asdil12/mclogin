@@ -2,7 +2,11 @@
 	<head>
 		<script src="minecraft_skin.js" type="text/javascript"></script>
 		<script type="text/javascript">
+			var lastuser = '';
 			function display_skin(username) {
+				if(!username) { username = 'default';  }
+				if(username  == lastuser) { return true; }
+				lastuser = username;
 				document.getElementById('view').src = '/MinecraftSkins/' + username + '.png';
 				//draw_hat('player_hat', username, 15);
 				//draw_head('player_head', username, 15);
@@ -62,18 +66,34 @@
 		?>
 		<br /><br />
 		<form method="post" enctype="multipart/form-data">
-		Username: <input type="text" name="username" id="username" />&nbsp;<button type='button' onclick="display_skin(document.getElementById('username').value);">View current</button><br />
-		Password: <input type="password" name="password" /><br />
-		New Skin: <input type="file" name="skin" /><br />
-		<input type="submit" value="change skin" />
+			<table border="0">
+				<tr>
+					<td>Username:</td>
+					<td><input type="text" name="username" id="username" onkeyup="display_skin(this.value);" /></td>
+					<!--&nbsp;<button type='button' onclick="display_skin(document.getElementById('username').value);">View current</button>-->
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td><input type="password" name="password" /></td>
+				</tr>
+				<tr>
+					<td>New Skin:</td>
+					<td><input type="file" name="skin" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><input type="submit" value="change skin" /></td>
+				</tr>
+			</table>
 		</form>
 		<br />
-		<div style="position: relative; width: 384px; height: 192px;">
-			<img width="384" height="192" id="view" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" style="position: absolute; left: 0; top: 0; z-index: 2; opacity: 0;" />
+		<div style="position: relative; width: 384px; height: 192px; border: 1px solid black;">
+			<img width="384" height="192" id="view" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" style="position: absolute; left: 0; top: 0; z-index: 3; opacity: 0;" />
+			<img width="384" height="192" src="skinoverlay.png" style="position: absolute; left: 0; top: 0; z-index: 2;" />
 			<canvas id="player_scratch" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
 		</div>
 		<h4>Preview</h4>
 
+		<noscript>Enable JavaScript to avoid failing!<br /></noscript>
 		<!--
 		<div class="minecraft_head" id="head">
 		    <canvas class="hat" id="player_hat"></canvas><canvas class="head" id="player_head"></canvas>
